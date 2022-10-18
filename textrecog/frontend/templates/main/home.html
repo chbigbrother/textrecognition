@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Text Recognition</title>
+  </head>
+  <body>
+    <h2>Text Recognition</h2>
+    <p id="status">OpenCV.js is loading...</p>
+    <div>
+      <div class="inputoutput">
+        <table>
+          <tr>
+            <td>
+              <img id="canvasInput" alt="No Image" />
+              <div class="caption">
+                imageSrc
+                <input type="file" id="fileInput" name="file" />
+              </div>
+            </td>
+            <td>
+              <!-- 1. opencv canvas -->
+              <canvas id="canvasOutput"></canvas>
+              <div class="caption">canvasOutput</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <script type="text/javascript">
+        let imgElement = document.getElementById("canvasInput");
+        let inputElement = document.getElementById("fileInput");
+        inputElement.addEventListener("change",(e) => {
+          imgElement.src = URL.createObjectURL(e.target.files[0]);
+        }, false);
+
+        //2. image showing using opencv script
+        imgElement.onload = function () {
+            /* 기존코드 (동일한그림 보여주기)
+                let mat = cv.imread(imgElement);
+                cv.imshow('canvasOutput', mat);
+                mat.delete();
+                */
+            // 수정한 코드 (색값 변경)
+            let src = cv.imread("canvasInput");
+            let dst = new cv.Mat();
+            cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+            cv.imshow("canvasOutput", dst);
+            src.delete();
+            dst.delete();
+        };
+        function onOpenCvReady() {
+            document.getElementById("status").innerHTML = "OpenCV.js is ready.";
+        }
+    </script>
+    <!-- 3. opencv script loading -->
+    <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+  </body>
+</html>
